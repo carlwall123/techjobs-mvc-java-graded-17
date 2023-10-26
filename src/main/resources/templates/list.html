@@ -1,36 +1,35 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments :: head}"></head>
-
 <body>
-
 <div th:replace="~{fragments :: page-header}"></div>
-
 <div class="container body-content">
   <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
-  <h2 class = "centered">View Jobs By Category</h2>
+  <h2 class="centered">View Jobs By Category</h2>
+  <table class="centeredTable">
+<!--    displays headers for categories-->
+    <tr>
+      <th:block th:each="column : ${columns}">
+        <th th:text="${column.value}"></th>
+      </th:block>
+    </tr>
+<!--    Displays list of jobs under each category-->
+    <tr>
+      <td th:each="category : ${tableChoices.entrySet()}">
+        <ul>
+<!--          Special method for "all" category to show all jobs-->
+          <li th:if="${category.key == 'all'}">
+            <a th:href="@{/list/jobs(column='all')}" th:text="'View All'"></a>
+          </li>
+<!--          Lists jobs under specific categories-->
+          <li th:each="item : ${category.value}" th:if="${category.key != 'all'}">
+            <a th:href="@{/list/jobs(column=${category.key}, value=${item})}" th:text="${item}"></a>
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </table>
 </div>
-
-<table class="centeredTable">
-  <tr>
-    <th:block th:each="column : ${columns}">
-      <th th:text = "${column.value}"></th>
-    </th:block>
-  </tr>
-  <tr>
-    <!-- TODO #2: Complete the View Jobs By Category Table. -->
-
-    <td></td> <!-- Feel free to remove or modify this element if necessary. -->
-
-    <td th:each="category : ${tableChoices}">
-      <ul>
-        <li th:each="item : ${category.value}">
-          <a th:href="@{/list/jobs(column=${category.key},value=${item})}" th:text="${item}"></a>
-        </li>
-      </ul>
-    </td>
-  </tr>
-</table>
-
 </body>
 </html>
+

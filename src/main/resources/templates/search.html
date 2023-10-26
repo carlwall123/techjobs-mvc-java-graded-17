@@ -37,8 +37,31 @@
   <hr />
 
   <!-- TODO #4 - Loop over the search results to display all job fields. -->
+    <!-- Only show this section if a search has performed -->
+    <div th:if="${searchPerformed}">
+        <!-- Loop over the search results if a job was found. -->
+        <div th:if="${jobs != null && !jobs.isEmpty()}">
+            <table class="job-listing">
+<!--                Table headers -->
+                <tr>
+                    <th>ID</th>
+                    <th>Employer</th>
+                    <th>Location</th>
+                    <th>Position</th>
+                    <th>Skill</th>
+                </tr>
+<!--                use my fragment from list-jobs.html and display each jobs details-->
+                <tr th:replace="~{list-jobs :: job-row}"></tr>
+            </table>
+        </div>
+<!--        Display message if no jobs are found-->
+        <div th:if="${jobs == null || jobs.isEmpty()}">
+            <p>No Jobs Found</p>
+        </div>
+    </div>
 
 </div>
+
 
 </body>
 </html>

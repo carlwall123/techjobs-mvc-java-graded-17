@@ -15,12 +15,14 @@ import java.util.HashMap;
  * Created by LaunchCode
  */
 @Controller
-@RequestMapping(value = "list")
+@RequestMapping(value = "list") //route for all methods in this controller to list
 public class ListController {
 
+//These static hashmaps hold column choices and table choices
     static HashMap<String, String> columnChoices = new HashMap<>();
     static HashMap<String, Object> tableChoices = new HashMap<>();
 
+    //Here we initialize column and table choices
     public ListController () {
         columnChoices.put("all", "All");
         columnChoices.put("employer", "Employer");
@@ -32,9 +34,11 @@ public class ListController {
         tableChoices.put("location", JobData.getAllLocations());
         tableChoices.put("positionType", JobData.getAllPositionTypes());
         tableChoices.put("coreCompetency", JobData.getAllCoreCompetency());
+        tableChoices.put("all", "View All");
+
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "")//Maps list route to this method of empty string
     public String list(Model model) {
         model.addAttribute("columns", columnChoices);
         model.addAttribute("tableChoices", tableChoices);
@@ -43,14 +47,15 @@ public class ListController {
         model.addAttribute("positions", JobData.getAllPositionTypes());
         model.addAttribute("skills", JobData.getAllCoreCompetency());
 
-        return "list";
+        return "list";//renders list template
     }
 
-    @GetMapping(value = "jobs")
-    public String listJobsByColumnAndValue(Model model, @RequestParam String column, @RequestParam(required = false) String value) {
+    @GetMapping(value = "jobs")//Maps list/jobs route to this method, and below we use logic to determine what jobs to fetch based on parameters.
+    public String listJobsByColumnAndValue(Model model, @RequestParam String column, @RequestParam(defaultValue = "") String value) {
         ArrayList<Job> jobs;
-        if (column.equals("all")){
+        if (column.equals("all") || value.isEmpty()){
             jobs = JobData.findAll();
+            System.out.println(jobs);
             model.addAttribute("title", "All Jobs");
         } else {
             jobs = JobData.findByColumnAndValue(column, value);
@@ -58,7 +63,7 @@ public class ListController {
         }
         model.addAttribute("jobs", jobs);
 
-        return "list-jobs";
+        return "list-jobs";//renders list-jobs template
     }
 }
 
